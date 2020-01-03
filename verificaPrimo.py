@@ -1,4 +1,3 @@
-
 #---------------------
 # numeros primos
 # Autor: Jose Carlos
@@ -55,6 +54,6 @@ elif (escolha == '2'):
                         print (k, 'é um primo')
                         i = 3
                         k +=2
+    input()                    
 else:
     print (escolha, 'não é uma opcao válida!')
-
