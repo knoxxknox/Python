@@ -48,10 +48,22 @@ elif (escolha == '2'):
                         #break
                         primo = True
                         if (primeira == 's'):
-                            print ('2 é um primo')
-                            print ('3 é um primo')
+                            #print ('2 é um primo')
+                            #print ('3 é um primo')
                             primeira = 'n'
-                        print (k, 'é um primo')
+                        #print (k, 'é um primo')
+                        texto = str(k)
+                        arquivo = open('arq01.txt','a')
+                        arquivo.write(texto + "\n")
+                        arquivo.close()
+                        arquivo = open('arq01.txt','r')
+                        
+                        '''
+                        for linha in arquivo:
+                            linha = linha.rstrip()
+                            print (linha)
+                        arquivo.close()
+                        '''
                         i = 3
                         k +=2
     input()                    
