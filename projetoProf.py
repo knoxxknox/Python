@@ -21,17 +21,15 @@ dados = firebase.database()
 # --------------------------------------------
 # Bloco de denifição de funcoes auxiliáres
 # --------------------------------------------
-def cad(id, fNome, lNome): # Função para cadastro de usuário no BD firebase
 
+def cad(id, fNome, lNome): # Função para cadastro de usuário no BD firebase
     inf = [{"fist_name":fNome,
             "last_name":lNome
             }
           ]
-
     for elemento in inf:
         #nome = elemento['fist_name']
-        dados.child("Pessoas").child(id).update(elemento)
-        
+        dados.child("Pessoas").child(id).update(elemento)        
     bot.sendMessage(id, (fNome + ' seu cadastrado realizado com sucesso!'))
 
 def verifPend(id):
@@ -47,19 +45,48 @@ def conteudo6Ano(id):
     bot.sendMessage(id, msg)    
     arquivo.close()
 
-
 def conteudo7Ano(id):
-    print ('aaa')
+    msg = ''
+    arquivo = open('/home/pi/Desktop/projetoProf/conteudo7Ano.txt','r')
+    for linha in arquivo:
+        linha = linha.rstrip()
+        msg = msg + linha + '\n'
+    bot.sendMessage(id, msg)    
+    arquivo.close()
 
 def conteudo8Ano(id):
-    print ('aaa')        
+    msg = ''
+    arquivo = open('/home/pi/Desktop/projetoProf/conteudo8Ano.txt','r')
+    for linha in arquivo:
+        linha = linha.rstrip()
+        msg = msg + linha + '\n'
+    bot.sendMessage(id, msg)    
+    arquivo.close()       
 
 def conteudo9Ano(id):
-    print ('aaa')
+    msg = ''
+    arquivo = open('/home/pi/Desktop/projetoProf/conteudo9Ano.txt','r')
+    for linha in arquivo:
+        linha = linha.rstrip()
+        msg = msg + linha + '\n'
+    bot.sendMessage(id, msg)    
+    arquivo.close()
+
+def enviaConteudo(pend, text, id):
+    indice = dados.child("Pessoas").child(id).child("indice")get()
+    if (indice.val() == None or int(indice.val) == 30):
+        dados.child("Pessoas").child(id).update({"indice":"1"})
+        indice = 1
+    arq = pend + text + indice + ".JPG"    
+    caminho = ("/home/pi/Desktop/projetoProf/" + pend + "/" + text + "/" + arq)
+    bot.sendPhoto(id, open(caminho, 'rb'), "Segue sua solicitação")
+    novoIndice = int(indice.val()) + 1
+    dados.child("Pessoas").child(id).update({"indice":novoIndice})
 
 # -------------------------------------------------
-# Inicio do processo com captura de dados no robô
+# Inicio do processo com captura de dados pelo robô
 # -------------------------------------------------
+
 def receber(msg): 
     text = (msg['text']).upper()
     id = msg['from']['id']
@@ -84,35 +111,38 @@ def receber(msg):
     if prosseguir == True:
         pend = (verifPend(id)) #funçao trás retorno, instrução return
         if pend != None:
-            if pend == '6' or pend == '7' or pend == '8' or pend == '9':
-                if (text == 'A' or text == 'B' or text == 'C' or text == 'D' or text == 'E' or text == 'F'):     
-                    print ('aaaaa')
-                    # ENVIAR ARQUIVO LENDO O DIRETORIO CORRETO
-                if text == 'SAIR':
-                    bot.sendMessage(id, (fNome + ' você desativou o envio do conteúdo do ' + pend + ' ano, caso deseje digite MENU para recomeçar.'))
-                    dados.child("Pessoas").child(id).child("pend").remove()
-                else:
-                    bot.sendMessage(id, (fNome + ', como atualmente você está com o conteúdo do ' + pend + ' ano aberto, você pode fecha-lo para então escolher outro diretório enviado SAIR, ou utilizar um dos comando abixo para o ' + pend + ' ano.'))
-                    if pend == '6':
-                        conteudo6Ano(id)
-                    elif pend == '7':
-                        conteudo7Ano(id)
-                    elif pend == '8':   
-                        conteudo8Ano(id)  
-                    elif pend == '9':   
-                        conteudo9Ano(id)                    
-        else:                        
-            if text == '6' or text == '7' or text == '8' or text == '9':
-                dados.child("Pessoas").child(id).update({"pend":text})
-                bot.sendMessage(id, (fNome + ' você está dentro do diretório do ' + text + ' ano. Envie a qualquer momento SAIR para fecha-lo, ou um dos comandos abaixo para receber o conteúdo.'))
-                if text == '6':
+            if (text == 'A' or text == 'B' or text == 'C' or text == 'D' or text == 'E' or text == 'F'):     
+                enviaConteudo(pend, text, id)        
+            if text == 'SAIR':
+                bot.sendMessage(id, (fNome + ' você desativou o envio do conteúdo do ' + pend + ' ano, caso deseje digite MENU para recomeçar.'))
+                dados.child("Pessoas").child(id).child("pend").remove()
+            else:
+                bot.sendMessage(id, (fNome + ', como atualmente você está com o conteúdo do ' + pend + ' ano aberto, você pode fecha-lo para então escolher outro diretório enviado SAIR, ou utilizar um dos comando abixo para o ' + pend + ' ano.'))
+                if pend == '6':
                     conteudo6Ano(id)
-                elif text == '7':
+                elif pend == '7':
                     conteudo7Ano(id)
-                elif text == '8':   
+                elif pend == '8':   
                     conteudo8Ano(id)  
-                elif text == '9':   
-                    conteudo9Ano(id)    
+                elif pend == '9':   
+                    conteudo9Ano(id)                    
+        else:     
+            if text == '6':
+                dados.child("Pessoas").child(id).update({"pend":text})
+                bot.sendMessage(id, (fNome + ' você está dentro do diretório do ' + text + ' ano. Envie a qualquer momento SAIR para fecha-lo, ou envie um dos comandos abaixo para receber o conteúdo.'))
+                conteudo6Ano(id)
+            elif text == '7':
+                dados.child("Pessoas").child(id).update({"pend":text})
+                bot.sendMessage(id, (fNome + ' você está dentro do diretório do ' + text + ' ano. Envie a qualquer momento SAIR para fecha-lo, ou envie um dos comandos abaixo para receber o conteúdo.'))
+                conteudo7Ano(id)
+            elif text == '8':  
+                dados.child("Pessoas").child(id).update({"pend":text})
+                bot.sendMessage(id, (fNome + ' você está dentro do diretório do ' + text + ' ano. Envie a qualquer momento SAIR para fecha-lo, ou envie um dos comandos abaixo para receber o conteúdo.'))
+                conteudo8Ano(id)  
+            elif text == '9':  
+                dados.child("Pessoas").child(id).update({"pend":text})
+                bot.sendMessage(id, (fNome + ' você está dentro do diretório do ' + text + ' ano. Envie a qualquer momento SAIR para fecha-lo, ou envie um dos comandos abaixo para receber o conteúdo.'))
+                conteudo9Ano(id) 
             else:
                 bot.sendMessage(id, (fNome + ' você digitou um comando inválido. Digite MENU e veja como prosseguir.'))
 
