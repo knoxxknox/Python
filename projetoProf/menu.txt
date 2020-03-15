@@ -1,2 +1,16 @@
+Escolha uma série (ano escolar), digitando uma das opções abaixo:
 
-Menu
+*>>* 6 = Para acessar o conteúdo do 6 ano
+*>>* 7 = Para acessar o conteúdo do 7 ano
+*>>* 8 = Para acessar o conteúdo do 8 ano
+*>>* 9 = Para acessar o conteúdo do 9 ano
+
+*Observações:* 
+
+>> Após fazer a escolha acima você receberá as informações para acessar cada conteúdo da série desejada.
+
+>> Para escolher outra série você deve digitar *SAIR* e em seguida fazer sua nova escolha.
+
+>> A qualquer momento digite *MENU* para acessar estas informações.
+
+>> Digite *SOBRE* para receber informações de contato do desenvolvedor.
