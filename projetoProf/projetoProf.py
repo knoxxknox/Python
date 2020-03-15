@@ -90,13 +90,13 @@ def enviaConteudo(pend, text, id):
         indiceStr = str(indice)
         arq = pend + text + indiceStr + ".jpeg"    
         caminho = ("/home/pi/Desktop/projetoProf/" + pend + "/" + text + "/" + arq)
-        bot.sendPhoto(id, open(caminho, 'rb'), "Segue sua solicitação")
+        ID = pend + text + indiceStr
+        bot.sendPhoto(id, open(caminho, 'rb'), "Id - " + ID)
     else:
         arq = pend + text + ".jpeg"    
         caminho = ("/home/pi/Desktop/projetoProf/" + pend + "/" + text + "/" + arq)
         bot.sendPhoto(id, open(caminho, 'rb'), "Segue sua solicitação")
         # Não é envio de quesões e sim de informações sobre o tópico
-
 
 # -------------------------------------------------
 # Inicio do processo com captura de dados pelo robô
@@ -128,6 +128,16 @@ def receber(msg):
             msg = msg + linha + '\n'
         bot.sendMessage(id, msg, parse_mode= 'Markdown')    
         arquivo.close()
+        
+    if text == 'SOBRE':
+        prosseguir = False
+        msg = ""
+        arquivo = open('/home/pi/Desktop/projetoProf/sobre.txt','r')
+        for linha in arquivo:
+            linha = linha.rstrip()
+            msg = msg + linha + '\n'
+        bot.sendMessage(id, msg, parse_mode= 'Markdown')    
+        arquivo.close()
     
     if prosseguir == True:
         pend = (verifPend(id)) #funçao trás retorno, instrução return
@@ -139,7 +149,7 @@ def receber(msg):
                 dados.child("Pessoas").child(id).child("pend").remove()
             else:
                 bot.sendMessage(id, (fNome + ', como atualmente você está com o conteúdo do ' + pend + ' ano aberto, você pode fecha-lo para então escolher outro diretório enviado *SAIR*, ou utilizar um dos comando abixo referentes ao ' + pend + ' ano.'), parse_mode= 'Markdown')
-                time.sleep(4)
+                time.sleep(1)
                 if pend == '6':
                     conteudo6Ano(id)
                 elif pend == '7':
@@ -152,22 +162,22 @@ def receber(msg):
             if text == '6':
                 dados.child("Pessoas").child(id).update({"pend":text})
                 bot.sendMessage(id, (fNome + ' você está dentro do diretório do ' + text + ' ano. Envie a qualquer momento *SAIR* para fecha-lo, ou envie um dos comandos abaixo para receber o conteúdo.'), parse_mode= 'Markdown')
-                time.sleep(3)
+                time.sleep(1)
                 conteudo6Ano(id)
             elif text == '7':
                 dados.child("Pessoas").child(id).update({"pend":text})
                 bot.sendMessage(id, (fNome + ' você está dentro do diretório do ' + text + ' ano. Envie a qualquer momento *SAIR* para fecha-lo, ou envie um dos comandos abaixo para receber o conteúdo.'), parse_mode= 'Markdown')
-                time.sleep(3)
+                time.sleep(1)
                 conteudo7Ano(id)
             elif text == '8':  
                 dados.child("Pessoas").child(id).update({"pend":text})
                 bot.sendMessage(id, (fNome + ' você está dentro do diretório do ' + text + ' ano. Envie a qualquer momento *SAIR* para fecha-lo, ou envie um dos comandos abaixo para receber o conteúdo.'), parse_mode= 'Markdown')
-                time.sleep(3)
+                time.sleep(1)
                 conteudo8Ano(id)  
             elif text == '9':  
                 dados.child("Pessoas").child(id).update({"pend":text})
                 bot.sendMessage(id, (fNome + ' você está dentro do diretório do ' + text + ' ano. Envie a qualquer momento *SAIR* para fecha-lo, ou envie um dos comandos abaixo para receber o conteúdo.'), parse_mode= 'Markdown')
-                time.sleep(3)
+                time.sleep(1)
                 conteudo9Ano(id) 
             else:
                 bot.sendMessage(id, (fNome + ' você não possui nenhum diretório aberto. Digite *MENU* e veja como prosseguir.'), parse_mode= 'Markdown')
