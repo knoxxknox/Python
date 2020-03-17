@@ -1,4 +1,4 @@
-Escolha uma série (ano escolar), digitando uma das opções abaixo:
+Escolha uma série (ano escolar), digitando uma das opções a seguir, ou precionando um dos botões abaixo:
 
 *>>* 6 = Para acessar o conteúdo do 6 ano
 *>>* 7 = Para acessar o conteúdo do 7 ano

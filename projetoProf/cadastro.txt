@@ -1,10 +1,10 @@
-Eu sou um robô matemático escrito em Python, e meu criador definou como minha função lhe fornecer conteúdos de Matemática sempre que você precisar.
+Eu sou um robô matemático, e meu criador definou como minha função lhe fornecer conteúdos de Matemática sempre que você precisar.
 
 Para utilizar meus conhecimentos é muito simples, veja:
 
 *>>* Primeiro você deve escolher uma série (ano escolar).
 *>>* Feito isso eu vou lhe apresentar os conteúdos dispovíveis.
-*>>* Assim que fizer sua escolha eu falei o possível para lhe entregar as informações desejadas.
+*>>* Assim que fizer a escolha de um dos conteúdos apresentados, eu falei o possível para lhe entregar as informações.
 
 ENTÃO, VAMOS COMEÇAR?
 
