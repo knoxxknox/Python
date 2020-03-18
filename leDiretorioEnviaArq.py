@@ -32,7 +32,6 @@ def receber(msg):
         else:
             caminho = "/home/pi/Desktop/d" 
             arqEscolhido = arquivo[indiceEscolhido]
-            print(arqEscolhido)
             enviarArquivo = caminho + "/" + arqEscolhido
             bot.sendPhoto(id, open(enviarArquivo, 'rb'), ";)")
           
