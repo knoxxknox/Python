@@ -1,3 +1,0 @@
-fraçõs = A
-soma = B
-raiz = C
