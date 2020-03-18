@@ -5,6 +5,8 @@ Escolha uma série (ano escolar), digitando uma das opções a seguir, ou precio
 *>>* 8 = Para acessar o conteúdo do 8 ano
 *>>* 9 = Para acessar o conteúdo do 9 ano
 
+*>>* Você pode também enviar *BIBLIOTECA* para ter acesso aos livros disponíveis e recebe-los a sua escolha
+
 *Observações:* 
 
 >> Após fazer a escolha acima você receberá as informações para acessar cada conteúdo da série desejada.

@@ -1,5 +1,6 @@
-fraçõs = A
-soma = B
-raiz = C
-
-testeee
+A = Cáculo vetorial 
+B = Dinamica dos fluídos 
+C = Bla bla bla...
+D = Topologia quantica 
+E = bla bla bla 2
+F = A volta dos que não foram

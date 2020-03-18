@@ -6,6 +6,7 @@ import time
 import sys
 import time
 import telepot
+import os
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 
@@ -38,7 +39,7 @@ def cad(id, fNome, lNome): # Função para cadastro de usuário no BD firebase
         #nome = elemento['fist_name']
         dados.child("Pessoas").child(id).update(elemento)        
     bot.sendMessage(id, (fNome + ' seu cadastrado realizado com sucesso!'))
-    time.sleep(3)
+    time.sleep(2)
     msg = ""
     arquivo = open('/home/pi/Desktop/projetoProf/cadastro.txt','r')
     for linha in arquivo:
@@ -51,7 +52,7 @@ def cad(id, fNome, lNome): # Função para cadastro de usuário no BD firebase
 def cadBotao(from_id): # Função para cadastro de usuário no BD firebase
     dados.child("Pessoas").child(from_id).update({"fist_name":"ALGUEM"})
     bot.sendMessage(from_id, ('Seu cadastrado realizado com sucesso!'))
-    time.sleep(3)
+    time.sleep(2)
     msg = ""
     arquivo = open('/home/pi/Desktop/projetoProf/cadastro.txt','r')
     for linha in arquivo:
@@ -104,7 +105,7 @@ def conteudo9Ano(id):
 
 def enviaConteudo(pend, text, id):
     if len(text) == 1:
-        indice = random.randint(1,1)
+        indice = random.randint(1,5)
         indiceStr = str(indice)
         arq = pend + text + indiceStr + ".jpeg"    
         caminho = ("/home/pi/Desktop/projetoProf/" + pend + "/" + text + "/" + arq)
@@ -115,6 +116,11 @@ def enviaConteudo(pend, text, id):
         caminho = ("/home/pi/Desktop/projetoProf/" + pend + "/" + text + "/" + arq)
         bot.sendPhoto(id, open(caminho, 'rb'), "Segue sua solicitação")
         # Não é envio de quesões e sim de informações sobre o tópico
+        
+def geraTupla():
+    caminho = "/home/pi/Desktop/projetoProf/biblioteca" 
+    for _, _, arquivo in os.walk(caminho):
+        return(arquivo)            
         
 def funcaoAuxiliarComPend(from_id, nome, pend):
     bot.sendMessage(from_id, (nome + ', como atualmente você está com o conteúdo do ' + pend + ' ano aberto, você pode fecha-lo para então escolher outro diretório enviado *SAIR*, ou utilizar um dos comando abixo referentes ao ' + pend + ' ano.'), parse_mode= 'Markdown')
@@ -130,9 +136,11 @@ def funcaoAuxiliarComPend(from_id, nome, pend):
     
 def funcaoAuxiliarSemPend(from_id, nome, query_data):
     dados.child("Pessoas").child(from_id).update({"pend":query_data})
-    bot.sendMessage(from_id, (nome + ' você está dentro do diretório do ' + query_data + ' ano. Envie a qualquer momento *SAIR* para fecha-lo, ou envie um dos comandos abaixo para receber o conteúdo.'), parse_mode= 'Markdown')
+    bot.sendMessage(from_id, (nome + ' você está dentro do diretório do ' + (query_data) + ' ano. Envie a qualquer momento *SAIR* para fecha-lo, ou envie um dos comandos abaixo para receber o conteúdo.'), parse_mode= 'Markdown')
     time.sleep(1)
     
+
+# Recebe valores pelos botões    
 def receberQuerry(msg):
     
     query_id, from_id, query_data  = telepot.glance(msg, flavor='callback_query')
@@ -188,6 +196,8 @@ def receber(msg):
     lNome = msg['from']['last_name']
     prosseguir = False
     
+    print(fNome, "--> ", text)
+    
     # Consultado o BD pelo get para verificar a existência do ID
     user = dados.child("Pessoas").child(id).get()
     if user.val() == None:
@@ -240,19 +250,52 @@ def receber(msg):
             if (text == 'A' or text == 'B' or text == 'C' or text == 'D' or text == 'E' or text == 'F'):     
                 enviaConteudo(pend, text, id)        
             elif text == 'SAIR':
-                bot.sendMessage(id, (fNome + ' você desativou o envio do conteúdo do ' + pend + ' ano, caso deseje digite *MENU* para recomeçar.'), parse_mode= 'Markdown')
-                dados.child("Pessoas").child(id).child("pend").remove()
+                if pend == "livro":
+                    bot.sendMessage(id, (fNome + ' o diretório da biblioteca foi fechado, caso deseje digite *MENU* para recomeçar.'), parse_mode= 'Markdown')
+                    dados.child("Pessoas").child(id).child("pend").remove()
+                else:
+                    bot.sendMessage(id, (fNome + ' você desativou o envio do conteúdo do ' + pend + ' ano, caso deseje digite *MENU* para recomeçar.'), parse_mode= 'Markdown')
+                    dados.child("Pessoas").child(id).child("pend").remove()
+                
+            elif (text == "LIVRO0" or text == "LIVRO1" or text == "LIVRO2" or text == "LIVRO3" or text == "LIVRO4" or text == "LIVRO05"):
+                arquivo = geraTupla()
+                
+                if len(text) == 6:
+                    indiceEscolhido = text[5:6]
+                else:
+                    indiceEscolhido = text[5:7]
+                       
+                maximo = len(arquivo)
+                if int(indiceEscolhido) >= maximo:
+                    bot.sendMessage(id, (fNome + ', esse arquivo não existe! Envie *biblioteca* e verifique suas opções. '), parse_mode= 'Markdown')
+                else:
+                    caminho = "/home/pi/Desktop/projetoProf/biblioteca" 
+                    arqEscolhido = arquivo[int(indiceEscolhido)]
+                    enviarArquivo = caminho + "/" + arqEscolhido
+                    #bot.sendPhoto(id, open(enviarArquivo, 'rb'), ";)")
+                    bot.sendDocument(id, open(enviarArquivo, 'rb'))
             else:
-                bot.sendMessage(id, (fNome + ', como atualmente você está com o conteúdo do ' + pend + ' ano aberto, você pode fecha-lo para então escolher outro diretório enviado *SAIR*, ou utilizar um dos comando abixo referentes ao ' + pend + ' ano.'), parse_mode= 'Markdown')
-                time.sleep(1)
-                if pend == '6':
-                    conteudo6Ano(id)
-                elif pend == '7':
-                    conteudo7Ano(id)
-                elif pend == '8':   
-                    conteudo8Ano(id)  
-                elif pend == '9':   
-                    conteudo9Ano(id)                    
+                
+                if pend == "livro":
+                    arq = ""
+                    indice = 0
+                    arquivo = geraTupla()
+                    for item in arquivo:
+                        arq = arq + "Livro" + str(indice) + " - " + item + "\n\n"
+                        indice += 1  
+                    bot.sendMessage(id, ('Olá ' + fNome + ', você está com a biblioteca aberta, envie o código correspondente para receber o seu livro, por exemplo: "livro2", ou envie SAIR para fechar a biblioteca. \n\n' + arq))
+                    dados.child("Pessoas").child(id).update({"pend":"livro"}) 
+                else:    
+                    bot.sendMessage(id, (fNome + ', como atualmente você está com o conteúdo do ' + pend + ' ano aberto, você pode fecha-lo para então escolher outro diretório enviado *SAIR*, ou utilizar um dos comando abixo referentes ao ' + pend + ' ano.'), parse_mode= 'Markdown')
+                    time.sleep(1)
+                    if pend == '6':
+                        conteudo6Ano(id)
+                    elif pend == '7':
+                        conteudo7Ano(id)
+                    elif pend == '8':   
+                        conteudo8Ano(id)  
+                    elif pend == '9':   
+                        conteudo9Ano(id)                    
         else:     
             if text == '6':
                 dados.child("Pessoas").child(id).update({"pend":text})
@@ -273,10 +316,19 @@ def receber(msg):
                 dados.child("Pessoas").child(id).update({"pend":text})
                 bot.sendMessage(id, (fNome + ' você está dentro do diretório do ' + text + ' ano. Envie a qualquer momento *SAIR* para fecha-lo, ou envie um dos comandos abaixo para receber o conteúdo.'), parse_mode= 'Markdown')
                 time.sleep(1)
-                conteudo9Ano(id) 
+                conteudo9Ano(id)
+
+            elif text == "BIBLIOTECA":
+                arq = ""
+                indice = 0
+                arquivo = geraTupla()
+                for item in arquivo:
+                    arq = arq + "Livro" + str(indice) + " - " + item + "\n\n"
+                    indice += 1  
+                bot.sendMessage(id, ('Olá ' + fNome + ', segue a lista de livros disponíveis. Envie o código correspondente para receber o seu, por exemplo: "livro2". \n\n' + arq))
+                dados.child("Pessoas").child(id).update({"pend":"livro"})    
             else:
                 bot.sendMessage(id, (fNome + ' você não possui nenhum diretório aberto. Digite *MENU* e veja como prosseguir.'), parse_mode= 'Markdown')
-
 
 bot = telepot.Bot(token)
 MessageLoop(bot, {'chat': receber,
