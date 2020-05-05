@@ -1,0 +1,25 @@
+Os alertas aqui cadastrados serão enviados sempre no dia e hora informados por você.
+
+Você pode executar três ações: 
+
+--------------------------------
+1) Cadastro de novos alertas
+
+Envie uma mensagem no formato: hh:mm-diaSemana-mensagem
+
+diaSemana pode ser SEG, TER, QUA, QUI, SEX, SAB ou DOM
+
+--------------------------------
+2) Listar todos os seus alertas cadastrados
+
+Envie a mensagem LISTA
+
+--------------------------------
+3  Fazer o cancelamento de um alerta
+
+Envie uma mensagem no formato: desativar-diaSemana-idXXX
+
+diaSemana pode ser SEG, TER, QUA, QUI, SEX, SAB ou DOM
+
+idXXX é o ID do alerta que deseja desativar, obtido ao enviar LISTA
+--------------------------------
